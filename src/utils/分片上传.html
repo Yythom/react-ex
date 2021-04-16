@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+        /**
+         *  分片上传文件类
+         */
+        class FragmentUploadFile {
+            constructor(options) {
+                this.file = options.file; // 文件
+                this.url = options.url; // url
+                this.fSize = 5 * 1024 * 1024; // 分片大小 默认为5M，前后端需统一，所以写死就可以了
+                this.pause = false; // 是否暂停
+                this.chunk = 1; // 当前上传的片
+                this.fd = null; // 表单数据
+                this.chunks = Math.ceil(options.file.size / this.fSize); // 总的片数
+                this._id = `${Math.random()}`.replace('0.', ''); // 14位随机数
+                this.userInfo = JSON.parse(sessionStorage.getItem('as_vlink_user_info'));
+                this.totalSize = options.file.size; // 文件大小
+                this.fileSize = options.file.size / 1024 >= 1000 ? (options.file.size / 1024 / 1024).toFixed(2) + ' M' : (options.file.size / 1024).toFixed(2) + ' KB'
+                this.curXhr = null; // 记住当前的xhr，用于随时可暂停
+                this.cb = options.cb; // 回调函数
+                this.result = {
+                    mes: "正在计算上传速度...",
+                    progress: 0,
+                    fileSize: this.fileSize,
+                    data: null,
+                    finishTimeMes: ""
+                }
+            }
+
+            sendFile() {
+                let blobFrom = (this.chunk - 1) * this.fSize,
+                    blobTo = this.chunk * this.fSize > this.totalSize ? this.totalSize : this.chunk * this.fSize;
+                let curSize = 0;
+                let startTime = new Date().getTime();
+                this.curXhr = new XMLHttpRequest();
+                this.curXhr.withCredentials = true;
+                this.fd = new FormData();
+                this.fd.append("file", this.file.slice(blobFrom, blobTo))
+                this.fd.append("fileName", this.file.name);
+                this.fd.append("chunk", this.chunk);
+                this.fd.append("totalChunks", this.chunks);
+                this.fd.append("id", this._id);
+                // 当前传的字节数，如果不是最后一片，那么就是fragmentSize
+                if (this.chunk * this.fSize > this.totalSize) {
+                    curSize = this.totalSize - (this.chunk - 1) * this.fSize
+                } else {
+                    curSize = this.fSize;
+                }
+                this.fd.append("size", curSize)
+                this.curXhr.open("post", this.url);
+                if (this.userInfo) {
+                    this.curXhr.setRequestHeader("SESSIONID", this.userInfo.sessionId)
+                }
+                this.curXhr.send(this.fd);
+                this.curXhr.onreadystatechange = () => {
+                    if (this.curXhr.readyState === 4) {
+                        if (this.curXhr.status === 200 || this.curXhr.status === 304) {
+                            this.chunk++;
+                            // 上传完计算上传速度，如果是最后一片直接显示上传完毕
+                            if (this.chunk > this.chunks) {
+                                this.result.mes = "上传完成"
+                                this.result.data = JSON.parse(this.curXhr.response).data;
+                                this.result.finishTimeMes = "";
+                            } else {
+                                let t = (new Date().getTime() - startTime) / 1000;
+                                let s = (blobTo - blobFrom) / 1024;
+                                let speed = s / t >= 1000 ? (s / t / 1024).toFixed(2) + " M/s" : (s / t).toFixed(2) + " KB/S";
+                                this.result.mes = "上传速度 " + speed;
+                                let dd = (this.totalSize - blobTo) / 1024 / (s / t)
+                                let needTime =
+                                    dd > 3600 ? parseInt(dd / 3600) + " 小时" :
+                                        dd > 60 ? parseInt(dd / 60) + " 分钟" :
+                                            parseInt(dd) + " 秒";
+                                this.result.finishTimeMes = "预计还需要" + needTime;
+                            }
+                            this.result.progress = (100 * blobTo / this.totalSize).toFixed(1) * 1;
+                            this.cb(this.result);
+                            if (this.chunk <= this.chunks && !this.pause) {
+                                this.sendFile();
+                            }
+                        }
+                    }
+                }
+            }
+
+            pauseSendFile() {
+                this.curXhr && this.curXhr.abort();
+                this.pause = true;
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <input type="file" name="" id="ooo">
+</body>
+<script>
+    let el = document.getElementById('ooo')
+    console.log(el);
+    el.onchange = function (e) {
+        let ele = document.getElementById('ooo').files[0]
+        console.log(ele);
+        let up = new FragmentUploadFile({
+            file: ele,
+            cb: function (e) {
+                console.log(e);
+            },
+            url: ''
+        })
+        up.sendFile()
+    }
+</script>
+
+</html>

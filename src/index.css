@@ -1,0 +1,81 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+html {
+  font-size: 10px;
+}
+
+#root,
+body,
+html,
+.layout {
+  height: 100%;
+  width: 100%;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
+.picker .picker-panel .picker-choose {
+  height: 30px !important;
+  display: flex;
+  justify-content: center;
+}
+
+.picker .picker-panel .picker-choose .picker-title {
+  line-height: 1 !important;
+}
+
+.picker .picker-panel .picker-choose .confirm {
+  padding: 0 !important;
+}
+
+.picker .picker-panel .picker-choose .cancel {
+  padding: 0 !important;
+}
+
+.ifr {
+  width: 100%;
+  height: 100%;
+}
+
+.ifr .modal {
+  position: fixed;
+  width: 80%;
+  height: 200px;
+  background-color: pink;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.aaa {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+}
+
+.htmlRender {
+  width: 400px;
+  height: 800px;
+  background-color: pink;
+}
