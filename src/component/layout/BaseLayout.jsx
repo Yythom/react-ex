@@ -16,7 +16,7 @@ import { getCookie, getAddress } from '../../utils/utils';
 
 function _Layout(props) {
     const history = useHistory();
-
+    let path = history.location.pathname;
 
     useEffect(() => {
         console.log('layout loading');
@@ -59,18 +59,7 @@ function _Layout(props) {
             }
 
             {
-                history.location.pathname.indexOf('home') === -1
-                    ? (
-                        history.location.pathname.indexOf('cashier') === -1
-                            && history.location.pathname.indexOf('map') === -1
-                            && history.location.pathname.indexOf('/search') === -1
-                            && history.location.pathname.indexOf('/orderdetail') === -1
-                            && (history.location.pathname.split('center')[1] === '/' || history.location.pathname.indexOf('/center/') === -1)
-                            // && history.location.pathname.indexOf('/orderdetail') === -1
-                            ? <TabBar />
-                            : null
-                    )
-                    : (!props.cartSummary.num ? <TabBar /> : null)
+                <TabBar />
             }
 
         </div>

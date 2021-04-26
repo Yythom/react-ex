@@ -41,6 +41,9 @@ export const mapDispatchToProps = (dispatch, ownProps) => {
             //     return false;
             // }
         },
+        setBrowser: (type) => {
+            dispatch({ type: 'TAB', BrowserType: type })
+        }
 
     }
 }

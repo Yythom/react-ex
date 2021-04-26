@@ -1,26 +1,23 @@
-import home from '../assets/icon/images/home.png'
-import sHome from '../assets/icon/images/s-home.png'
-import order_ed from '../assets/icon/images/order_ed.png'
-import order_no from '../assets/icon/images/order.png'
-import me from '../assets/icon/images/me.png'
-import me_ed from '../assets/icon/images/me_ed.png'
-
-
-let integral = '/integral';
+import Demo from '../pages/demo/index'
+let url = '/';
 
 let router = () => {
     return {
         // index: {
-        //     url: integral,
+        //     url: url,
         //     icon: home,
         //     activeIcon: sHome,
         //     desc: '主页',
         //     page: Index
         // },
-
+        demo: {
+            url: url + 'demo',
+            desc: '主页',
+            page: Demo
+        },
         // // 副包 （不在tabbar显示）
         // shopDetail: {
-        //     url: integral + '/shopdetail',
+        //     url: url + '/shopdetail',
         //     page: Shop_detail,
         //     isShow: true, // 不现实tab
         // },

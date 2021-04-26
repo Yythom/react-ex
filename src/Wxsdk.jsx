@@ -11,7 +11,7 @@ function WxConfigs() {
     const configWx = async () => {
         const host = document.location.href;
         let _res = await getWxConfigs({ url: host, })
-        console.log(_res);
+        console.log(_res, 'getWxConfigs');
         if (_res) {
             const { appId, timestamp, nonceStr, signature } = _res;
             wx.config({

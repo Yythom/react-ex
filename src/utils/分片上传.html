@@ -31,7 +31,8 @@
                     progress: 0,
                     fileSize: this.fileSize,
                     data: null,
-                    finishTimeMes: ""
+                    finishTimeMes: "",
+                    chunks: this.chunk
                 }
             }
 
@@ -101,14 +102,16 @@
 
 <body>
     <input type="file" name="" id="ooo">
+    <button onclick="xhr()"></button>
 </body>
 <script>
     let el = document.getElementById('ooo')
     console.log(el);
+    let up;
     el.onchange = function (e) {
         let ele = document.getElementById('ooo').files[0]
         console.log(ele);
-        let up = new FragmentUploadFile({
+        up = new FragmentUploadFile({
             file: ele,
             cb: function (e) {
                 console.log(e);
@@ -116,6 +119,9 @@
             url: ''
         })
         up.sendFile()
+    }
+    function xhr() {
+        console.log(up.result);
     }
 </script>
 

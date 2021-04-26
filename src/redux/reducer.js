@@ -17,6 +17,9 @@ export const reducer = (state = initState, action) => {
         case "INFO": // 用户信息
             states.userStore = action.info
             return states;
+        case "BRO": // 用户信息
+            states.Browser = action.BrowserType
+            return states;
         default:
             return states;
     }
